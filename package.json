@@ -1,20 +1,21 @@
 {
   "name": "saraha-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "An anonymous messaging platform — users share a profile link or QR code to receive anonymous messages.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "type": "module",
-  "keywords": [],
-  "author": "",
+  "keywords": ["express", "mongoose", "ejs", "nodejs"],
+  "author": "Ahmed A. Eid",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "connect-mongodb-session": "^5.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "express-session": "^1.18.1",

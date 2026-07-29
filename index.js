@@ -1,3 +1,4 @@
+import 'dotenv/config'
 process.on('uncaughtException', (error) => {
     console.error('Caught exception:', error);
 })
@@ -11,13 +12,12 @@ import userRouter from './src/modules/user/user.routes.js';
 import session from 'express-session'
 import mongoSession from 'connect-mongodb-session'
 import cors from 'cors'
-import path from 'path';
 let MongoDBStore = mongoSession(session)
 
 
 
 var store = new MongoDBStore({
-    uri: 'mongodb+srv://paradoxaldev:paradox@paradoxal-activity.41jqk.mongodb.net/mvc_sarahaApp',
+    uri: process.env.MONGODB_URI,
     collection: 'mySessions'
 });
 
@@ -31,7 +31,7 @@ app.use("/public", express.static("public")); /*For Development */
 // app.use(express.static(path.join(path.resolve(), "public"))); /*For Vercel Production */
 
 app.use(session({
-    secret: 'keyboardOn',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store,
