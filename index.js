@@ -2,6 +2,7 @@ import 'dotenv/config'
 process.on('uncaughtException', (error) => {
     console.error('Caught exception:', error);
 })
+import path from 'node:path'
 import express from 'express'
 import { dbConnection } from "./database/dbConnection.js";
 import homeRouter from './src/modules/home/home.routes.js';
@@ -21,14 +22,18 @@ var store = new MongoDBStore({
     collection: 'mySessions'
 });
 
+store.on('error', (error) => {
+    console.error('Session store error:', error);
+});
+
 const app = express()
 const port = process.env.PORT || 3980
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/public", express.static("public")); /*For Development */
-// app.set("views", path.resolve() + "/views")/*For Vercel Production */
-// app.use(express.static(path.join(path.resolve(), "public"))); /*For Vercel Production */
+/* Absolute paths: the serverless working directory is not the project root */
+app.set("views", path.join(process.cwd(), "views"));
+app.use("/public", express.static(path.join(process.cwd(), "public")));
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -53,4 +58,10 @@ app.use('*', (req, res) => {
 process.on('unhandledRejection', (error) => {
     console.error('Caught rejection:', error);
 })
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+/* Vercel imports the app as a handler; only listen when running locally */
+if (!process.env.VERCEL) {
+    app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+}
+
+export default app
